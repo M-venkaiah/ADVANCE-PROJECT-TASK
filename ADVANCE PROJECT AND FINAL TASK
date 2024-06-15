@@ -1,0 +1,196 @@
+ADVANCE PROJECT TASK :
+
+
+Project Overview: Building a Business Intelligence (BI) Application
+Introduction:
+Business Intelligence (BI) applications are essential for organizations to analyze data and make informed decisions. These applications help in transforming raw data into meaningful insights through various tools and technologies. The goal of this project is to build a low to no-code BI app that will enable users to visualize and analyze their data effectively, thereby facilitating decision-making and strategy formulation.
+
+Objectives:
+Develop a user-friendly BI application with intuitive dashboards.
+Enable data integration from multiple sources.
+Provide real-time data analytics and reporting.
+Ensure the application is customizable to meet the specific needs of different businesses.
+Implement security measures to protect sensitive data.
+Features:
+Data Integration: Connect to various data sources such as databases, spreadsheets, cloud services, and APIs.
+Interactive Dashboards: Create dynamic and interactive dashboards that display key metrics and trends.
+Data Visualization: Utilize various visualization tools (charts, graphs, maps) to present data in a comprehensible manner.
+Reporting and Alerts: Generate reports and set up alerts for specific conditions or thresholds.
+Customizability: Allow users to customize dashboards, reports, and visualizations according to their requirements.
+User Management: Manage different user roles and permissions to ensure data security.
+Mobile Accessibility: Ensure the application is accessible on mobile devices for on-the-go data analysis.
+Technologies and Tools:
+Low/No-Code Platforms: Such as Power BI, Tableau, or Google Data Studio for ease of development and customization.
+Backend: Use cloud-based databases like AWS RDS, Google BigQuery, or Azure SQL Database.
+Frontend: Responsive web design using HTML, CSS, and JavaScript frameworks like React or Angular (if custom development is needed).
+APIs: For data integration from various sources.
+Security: Implement data encryption, user authentication, and authorization protocols.
+Project Plan:
+Phase 1: Requirement Gathering and Analysis
+Identify key business problems and data requirements.
+Define user roles and permissions.
+Select appropriate tools and technologies.
+Phase 2: Design
+Design the data architecture and flow.
+Create wireframes and mockups for dashboards and reports.
+Plan the user interface (UI) and user experience (UX) design.
+Phase 3: Development
+Set up data integration from various sources.
+Develop the BI dashboards and visualizations.
+Implement reporting and alerting features.
+Develop user management and security features.
+Phase 4: Testing
+Conduct unit testing, integration testing, and user acceptance testing (UAT).
+Ensure the app works seamlessly on different devices and browsers.
+Perform security testing to protect against vulnerabilities.
+Phase 5: Deployment and Training
+Deploy the BI app on a production environment.
+Provide training to end-users on how to use the app.
+Create documentation and support materials.
+Phase 6: Maintenance and Updates
+Monitor the app for performance and issues.
+Provide regular updates and new features based on user feedback.
+Ensure ongoing support and maintenance.
+Deliverables:
+A fully functional BI application.
+User documentation and training materials.
+Technical documentation for maintenance and updates.
+A deployment plan with steps for future updates.
+Success Criteria:
+The application should enable users to make data-driven decisions efficiently.
+It should provide real-time data insights with high accuracy.
+Users should be able to customize the app according to their business needs.
+The app should be secure and protect sensitive business data.
+Positive user feedback and adoption rates.
+By following this structured approach, we can develop a robust BI app that meets the needs of businesses, helping them to solve high-cost issues and make strategic decisions based on data-driven insights.
+
+CODE AND SOLUTION :
+
+isStreaming: false,	  isStreaming: false,
+  username: '<username>',	  username: '<username>',
+  password: '<password>',	  password: '<password>',
+<<<<<<< HEAD	
+  version_date: '2016-02-11',	
+  version: 'v3-beta'	
+=======	
+  version: 'v3-beta',	  version: 'v3-beta',
+  version_date: '2016-02-11'	  version_date: '2016-02-11'
+>>>>>>> pr/2	
+});	});
+
+
+var alchemyApiKey = { api_key: process.env.ALCHEMY_API_KEY || '<your api key>'};	var alchemyApiKey = { api_key: process.env.ALCHEMY_API_KEY || '<your api key>'};
+  4 changes: 0 additions & 4 deletions4  
+package.json
+Original file line number	Original file line	Diff line number	Diff line change
+@@ -13,11 +13,7 @@
+    "express-secure-only": "^0.2.1",	    "express-secure-only": "^0.2.1",
+    "helmet": "^0.14.0",	    "helmet": "^0.14.0",
+    "q": "^1.4.1",	    "q": "^1.4.1",
+<<<<<<< HEAD	
+    "watson-developer-cloud": "^1.2.2"	
+=======	
+    "watson-developer-cloud": "^1.2.3"	    "watson-developer-cloud": "^1.2.3"
+>>>>>>> pr/2	
+  },	  },
+  "repository": {	  "repository": {
+    "type": "git",	    "type": "git",
+  29 changes: 17 additions & 12 deletions29  
+public/js/app/articleTable.js
+Original file line number	Original file line	Diff line number	Diff line change
+@@ -1,5 +1,5 @@
+(function(app) {	(function(app) {
+
+  'use strict';
+  app.ArticleTable = function(dom, args) {	  app.ArticleTable = function(dom, args) {
+    this.domNode = dom;	    this.domNode = dom;
+
+
+@@ -61,23 +61,28 @@
+            break;	            break;
+          case 'tone':	          case 'tone':
+            var tones = [];	            var tones = [];
+            rowData.tone.children.forEach(function(toneCategory) {	            if(rowData.tone &&
+              if (toneCategory.id === 'emotion_tone') {	              rowData.tone.document_tone &&
+                toneCategory.children.forEach(function(tone) {	              rowData.tone.document_tone.tone_categories instanceof Array
+                  if (tone.normalized_score !== 0) {	              ){
+                    tones.push(tone);	              rowData.tone.document_tone.tone_categories.forEach(function(toneCategory) {
+                  }	                if (toneCategory.category_id === 'emotion_tone') {
+                });	                  toneCategory.tones.forEach(function(tone) {
+              }	                    if (tone.score !== 0) {
+            });	                      tones.push(tone);
+                    }
+                  });
+                }
+              });
+            }
+            tones.sort(function(elem1, elem2) {	            tones.sort(function(elem1, elem2) {
+              return elem2.normalized_score - elem1.normalized_score;	              return elem2.score - elem1.score;
+            });	            });
+            var toneText = '';	            var toneText = '';
+            var sep = '';	            var sep = '';
+            tones.forEach(function(tone) {	            tones.forEach(function(tone) {
+              toneText += sep;	              toneText += sep;
+              toneText += tone.name + ' (' + (tone.normalized_score * 100).toFixed(2) + '%)';	              toneText += tone.tone_name + ' (' + (tone.score * 100).toFixed(2) + '%)';
+              sep = ', ';	              sep = ', ';
+            });	            });
+            td.html(toneText);	            td.html(toneText);
+
+CONCLUSION FOR THIS ADVANCED PROJECT :
+
+Conclusion for the Advanced Project Internship
+Summary:
+The Advanced Project Internship focused on building a Business Intelligence (BI) application, showcasing the importance of low to no-code tools in addressing high-cost business issues and facilitating data-driven decision-making. The project aimed to create an intuitive, customizable, and secure BI app that integrates data from multiple sources, providing real-time analytics and interactive visualizations.
+
+Key Achievements:
+Successful Development:
+
+Developed a user-friendly BI application with dynamic dashboards and comprehensive data visualizations.
+Implemented seamless data integration from various sources, ensuring real-time data analytics.
+Enhanced Decision-Making:
+
+The app enabled users to make informed decisions through easily accessible and interpretable data insights.
+Customizable features allowed businesses to tailor the app to their specific needs, enhancing its utility and relevance.
+User-Centric Design:
+
+Prioritized user experience (UX) and interface design (UI) to create an intuitive and engaging platform.
+Conducted thorough testing to ensure cross-platform compatibility and responsive design for mobile access.
+Robust Security:
+
+Integrated strong security measures, including data encryption, user authentication, and role-based access controls, to protect sensitive business information.
+Ensured compliance with industry standards and best practices for data security.
+Comprehensive Training and Support:
+
+Provided detailed documentation and training materials to facilitate user adoption and proficiency.
+Established a support framework for ongoing maintenance, updates, and user assistance.
+Learning Outcomes:
+Technical Proficiency:
+
+Gained hands-on experience with low to no-code BI tools, cloud databases, and data visualization techniques.
+Enhanced skills in backend integration, frontend development, and API usage.
+Project Management:
+
+Developed project planning and execution skills, from requirement gathering to deployment and maintenance.
+Learned to balance technical and business requirements, ensuring the final product meets user needs and organizational goals.
+Collaboration and Communication:
+
+Worked collaboratively in a team environment, sharing knowledge and responsibilities.
+Improved communication skills through regular updates, presentations, and training sessions.
+Problem-Solving:
+
+Addressed and resolved challenges related to data integration, security, and user interface design.
+Applied critical thinking and analytical skills to enhance the functionality and performance of the BI app.
+Future Prospects:
+The successful completion of this BI app project demonstrates the potential for low to no-code solutions in transforming how businesses approach data analytics and decision-making. The insights and skills gained during this internship can be leveraged in future projects to continue innovating and improving business intelligence tools. Additionally, the experience provides a solid foundation for tackling more complex BI challenges and contributing to the development of advanced data-driven strategies in various industries.
+
+Final Thoughts:
+The Advanced Project Internship has been an invaluable learning experience, combining technical development with practical business applications. The project not only highlights the importance of BI tools in modern organizations but also emphasizes the role of innovation and adaptability in creating solutions that drive efficiency and strategic growth. Moving forward, the knowledge and experience gained from this internship will be instrumental in pursuing further advancements in the field of business intelligence and analytics.
+
+
+
+
+
+
+
+
+
